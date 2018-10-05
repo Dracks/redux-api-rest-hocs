@@ -1,0 +1,23 @@
+language: node_js
+
+node_js:
+    - "8"
+
+cache:
+  directories:
+    - "node_modules"
+
+install:
+  - npm install
+
+before_script:
+  - npm test
+
+script:
+  - npm run build
+
+deploy:
+  provider: npm
+  email: "mail@jaumesingla.es"
+  api_key: "$NPM_TOKEN"
+  skip_cleanup: true
