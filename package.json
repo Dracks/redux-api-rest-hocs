@@ -1,0 +1,45 @@
+{
+  "name": "redux-api-rest-hocs",
+  "version": "beta",
+  "description": "It's a library to add redux compatibility with redux",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "**/*"
+  ],
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "url": "https://github.com/Dracks/redux-rest"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "test": "yarn run jest --config=.jest.json",
+    "test:watch": "yarn run jest --config=.jest.json --watch"
+  },
+  "keywords": [
+    "redux",
+    "rest"
+  ],
+  "author": "Jaume Singla Valls",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/enzyme": "^3.1.14",
+    "@types/enzyme-adapter-react-16": "^1.0.3",
+    "@types/jest": "^23.3.2",
+    "enzyme": "^3.6.0",
+    "enzyme-adapter-react-16": "^1.5.0",
+    "jest": "^23.6.0",
+    "react-dom": "^16.5.2",
+    "ts-jest": "^23.10.1",
+    "typedoc": "^0.12.0",
+    "typescript": "^3.0.3"
+  },
+  "dependencies": {
+    "@types/react": "^16.4.14",
+    "react": "^16.5.2",
+    "redux": "^4.0.0"
+  }
+}
