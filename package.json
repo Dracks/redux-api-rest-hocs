@@ -1,6 +1,6 @@
 {
   "name": "redux-api-rest-hocs",
-  "version": "beta",
+  "version": "1.0.0-beta",
   "description": "It's a library to add redux compatibility with redux",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
