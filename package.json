@@ -21,7 +21,8 @@
   },
   "keywords": [
     "redux",
-    "rest"
+    "rest",
+    "react"
   ],
   "author": "Jaume Singla Valls",
   "license": "ISC",
