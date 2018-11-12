@@ -1,5 +1,9 @@
 
-
+/**
+ * Check if multiple props are loading
+ * @param props List of props to check
+ * @returns a new object with the properties of isLoading that is the merge of all the props
+ */
 const MultiPropsLoadingHOC = (props:string[]) => (state: any) => {
     var status = null
     var totalKeys = props.length;

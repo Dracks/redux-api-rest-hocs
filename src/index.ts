@@ -1,9 +1,9 @@
 import withLoading from './LoadingHoc';
 import MultiPropsLoadingHOC from './MultiPropsLoadingHOC';
-
-export { extractData } from './LoadingHoc';
+import restChain from './RestChain';
 
 export {
     withLoading,
     MultiPropsLoadingHOC,
+    restChain,
 }
