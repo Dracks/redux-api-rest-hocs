@@ -6,7 +6,6 @@
         "target": "es5",
         "jsx": "react",
         "esModuleInterop":true,
-        "allowSyntheticDefaultImports": true,
         "module": "commonjs",
         "moduleResolution": "node",
         "lib": [

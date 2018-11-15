@@ -4,11 +4,13 @@ import { ComponentType } from "react";
 
 type EnrichFn<T> = (prop:T)=>ChainFn
 
+type EnrichComponentFn = <T extends {}>(c:ComponentType<T>, context: ChainData) => ComponentType<T>
+
 type ChainData = {
     property: string,
-    withInitialize: (c:ComponentType)=>ComponentType
-    withLoading: (c:ComponentType)=>ComponentType
-    withError: (c:ComponentType)=>ComponentType
+    withInitialize: EnrichComponentFn
+    withLoading: EnrichComponentFn
+    withError: EnrichComponentFn
 }
 
 type ChainFn = {
@@ -35,10 +37,10 @@ type ChainFn = {
     /**
      * Set the component that be rendered on everything ok, and return the component to be used
      */
-    build: (p:ComponentType)=>ComponentType
+    build: <T>(p:ComponentType<T>)=>ComponentType<T>
 }
 
-export const IdentityCreator = (EndComponent:ComponentType)=>EndComponent
+export const IdentityCreator = <T extends {}>(EndComponent:ComponentType<T>)=>EndComponent
 
 
 const buildSetProperty = (curr: ChainData):EnrichFn<string>=>(data)=>(builder({
@@ -48,8 +50,8 @@ const buildSetProperty = (curr: ChainData):EnrichFn<string>=>(data)=>(builder({
 
 const buildSetInitialize = (curr: ChainData)=>(initProp:string)=>(builder({
     ...curr,
-    withInitialize:  (EndComponent:ComponentType)=>(props:any)=>{
-        let property = curr.property
+    withInitialize:  <T extends {}>(EndComponent:ComponentType<T>, context: ChainData)=>(props:any)=>{
+        let property = context.property
         let data = props[property]
         if (data && (data.data || data.isLoading)){
             return <EndComponent {...props} />
@@ -70,8 +72,8 @@ const buildSetInitialize = (curr: ChainData)=>(initProp:string)=>(builder({
 
 const buildWithLoading = (curr: ChainData)=>(LoadingComponent: ComponentType)=>(builder({
     ...curr,
-    withLoading: (EndComponent:ComponentType)=>(props:any)=>{
-        const value = props[curr.property]
+    withLoading: <T extends {}>(EndComponent:ComponentType<T>, context: ChainData)=>(props:any)=>{
+        const value = props[context.property]
         if (value && value.isLoading){
             return <LoadingComponent />
         } else {
@@ -82,8 +84,8 @@ const buildWithLoading = (curr: ChainData)=>(LoadingComponent: ComponentType)=>(
 
 const buildWithError = (curr: ChainData)=>(ErrorComponent: ComponentType)=>(builder({
     ...curr,
-    withLoading: (EndComponent:ComponentType)=>(props:any)=>{
-        const value = props[curr.property]
+    withLoading: <T extends {}>(EndComponent:ComponentType<T>, context: ChainData)=>(props:any)=>{
+        const value = props[context.property]
         if (value && value.error){
             return <ErrorComponent {...props}/>
         } else {
@@ -92,20 +94,22 @@ const buildWithError = (curr: ChainData)=>(ErrorComponent: ComponentType)=>(buil
     }
 }))
 
-const buildCreateComponent = ({property, withLoading, withInitialize}: ChainData)=> (Component: ComponentType):ComponentType=>{
-    let end = (props:any)=>{
-        let data = props[property]
-        if (data){
-            const newProps = {
-                ...props,
-                [property]: data.data
+const buildCreateComponent = (currentData: ChainData)=>
+    <T extends {}>(Component: ComponentType<T>):ComponentType<T>=>{
+        const {property, withLoading, withInitialize} = currentData
+        let end = (props:any)=>{
+            let data = (props as any)[property]
+            if (data){
+                const newProps = {
+                    ...(props as {}),
+                    [property]: data.data
+                }
+                return <Component {...newProps} />
+            } else {
+                return <Component {...props}/>
             }
-            return <Component {...newProps} />
-        } else {
-            return <Component {...props}/>
         }
-    }
-    return withInitialize(withLoading(end));
+        return withInitialize(withLoading(end, currentData), currentData);
 }
 
 const builder = (props:ChainData):ChainFn=>({

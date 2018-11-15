@@ -56,6 +56,19 @@ describe('[RestChain]', ()=>{
         expect(mock).toBeCalledWith({}, {})
     })
 
+    it('With Initialize unordered & no-Data', ()=>{
+        let mock = jest.fn(Loading);
+        let init = jest.fn();
+        let Test = restChain()
+            .setInitialize('init')
+            .setProperty('dalek')
+            .withLoading(mock)
+            .build(Content)
+        check(Test, {init, first:35}, mock)
+        expect(init).toBeCalledWith({init, first:35});
+        expect(mock).toBeCalledWith({}, {})
+    })
+
     it('With Error', ()=>{
         let mock = jest.fn(Loading);
         let Test = restChain()
