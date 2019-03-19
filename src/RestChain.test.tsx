@@ -71,12 +71,17 @@ describe('[RestChain]', ()=>{
 
     it('With Error', ()=>{
         let mock = jest.fn(Loading);
+        let mockLoading = jest.fn(Loading);
         let Test = restChain()
             .setProperty('dalek')
             .withError(mock)
+            .withLoading(Loading)
             .build(Content)
         check(Test, {dalek:{error: "Hello error"}}, mock)
         expect(mock).toBeCalledWith({dalek:{error: "Hello error"}}, {})
+
+        check(Test, {dalek:{isLoading: true}}, mockLoading)
+        expect(mockLoading).toBeCalledWith({}, {})
     })
 
 
