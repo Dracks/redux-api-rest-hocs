@@ -22,7 +22,7 @@ export default function withLoading<T extends PropsType, L extends LoadingProps>
                 return <div></div>;
             }
         }
-        let p = { className: (props as any).className}
+        let p = { className: (props as any).className} as L
         return <Loading {...p} />
     }
 }

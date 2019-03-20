@@ -74,9 +74,10 @@ describe('[RestChain]', ()=>{
         let mockLoading = jest.fn(Loading);
         let Test = restChain()
             .setProperty('dalek')
+            .withLoading(mockLoading)
             .withError(mock)
-            .withLoading(Loading)
             .build(Content)
+
         check(Test, {dalek:{error: "Hello error"}}, mock)
         expect(mock).toBeCalledWith({dalek:{error: "Hello error"}}, {})
 
