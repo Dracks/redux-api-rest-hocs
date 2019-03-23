@@ -21,3 +21,5 @@ deploy:
   email: "mail@jaumesingla.es"
   api_key: "$NPM_TOKEN"
   skip_cleanup: true
+  on:
+    tags: true
