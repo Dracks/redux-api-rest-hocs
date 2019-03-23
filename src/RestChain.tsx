@@ -1,6 +1,6 @@
 import React from "react";
 import { ComponentType } from "react";
-import { Response } from "./Types";
+import { Response, IErrorProps } from "./Types";
 
 
 type EnrichFn<T> = (prop:T)=>ChainFn
@@ -44,7 +44,7 @@ type ChainFn = {
      * Set the component that should render in case of error
      * @param prop Component to be rendered
      */
-    withError: EnrichFn<ComponentType>
+    withError: EnrichFn<ComponentType<IErrorProps>>
     /**
      * Set the component that be rendered on everything ok, and return the component to be used
      */
@@ -93,12 +93,12 @@ const buildWithLoading = (curr: ChainData)=>(LoadingComponent: ComponentType)=>(
     }
 }))
 
-const buildWithError = (curr: ChainData)=>(ErrorComponent: ComponentType)=>(builder({
+const buildWithError = (curr: ChainData)=>(ErrorComponent: ComponentType<IErrorProps>)=>(builder({
     ...curr,
     withError: <T extends {}>(EndComponent:ComponentType<T>, context: ChainData)=>(props:any)=>{
         const value = props[context.property] as Response
         if (value && value.error){
-            return <ErrorComponent {...props}/>
+            return <ErrorComponent url={value.meta.url!} error={value.error}/>
         } else {
             return <EndComponent {...props}/>
         }
