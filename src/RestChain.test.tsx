@@ -78,8 +78,8 @@ describe('[RestChain]', ()=>{
             .withError(mock)
             .build(Content)
 
-        check(Test, {dalek:{error: "Hello error"}}, mock)
-        expect(mock).toBeCalledWith({dalek:{error: "Hello error"}}, {})
+        check(Test, {dalek:{error: "Hello error", meta: {url: "Ping floid"}}}, mock)
+        expect(mock).toBeCalledWith({error: "Hello error", url: "Ping floid"}, {})
 
         check(Test, {dalek:{meta: {isLoading: true}}}, mockLoading)
         expect(mockLoading).toBeCalledWith({}, {})
