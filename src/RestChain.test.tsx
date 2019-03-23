@@ -29,7 +29,7 @@ describe('[RestChain]', ()=>{
             .setProperty('dalek')
             .withLoading(Loading)
             .build(mock)
-        check(Test, {dalek:{isLoading: false, data: "hi world"}}, mock)
+        check(Test, {dalek:{meta: {isLoading: false}, data: "hi world"}}, mock)
         expect(mock).toBeCalledWith({dalek: "hi world"}, {})
     })
 
@@ -39,7 +39,7 @@ describe('[RestChain]', ()=>{
             .setProperty('dalek')
             .withLoading(mock)
             .build(Content)
-        check(Test, {dalek:{isLoading: true, data: "hi world"}}, mock)
+        check(Test, {dalek:{meta: {isLoading: true}, data: "hi world"}}, mock)
         expect(mock).toBeCalledWith({}, {})
     })
 
@@ -81,7 +81,7 @@ describe('[RestChain]', ()=>{
         check(Test, {dalek:{error: "Hello error"}}, mock)
         expect(mock).toBeCalledWith({dalek:{error: "Hello error"}}, {})
 
-        check(Test, {dalek:{isLoading: true}}, mockLoading)
+        check(Test, {dalek:{meta: {isLoading: true}}}, mockLoading)
         expect(mockLoading).toBeCalledWith({}, {})
     })
 

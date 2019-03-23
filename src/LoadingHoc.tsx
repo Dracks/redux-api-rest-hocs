@@ -8,7 +8,7 @@ export default function withLoading<T extends PropsType, L extends LoadingProps>
     return  (props:T)=> {
         var data :Response = props[dataName] as any;
         if (data){
-            if (!data.isLoading){
+            if (!data.meta || !data.meta.isLoading){
                 var newValue: T = {} as any;
                 newValue[dataName]= data.data;
                 var newProps = Object.assign({}, props, newValue);

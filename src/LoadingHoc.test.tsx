@@ -24,7 +24,7 @@ describe("[hoc/LoadingHoc]", ()=>{
         });
 
         it ("when we are loading", ()=>{
-            check({dalek: {isLoading:true}}, Loading);
+            check({dalek: {meta: {isLoading:true}}}, Loading);
         });
     });
 

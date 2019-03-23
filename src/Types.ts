@@ -1,5 +1,8 @@
 export type Response = {
-    isLoading: boolean
-    data: any
-    error: any
+    meta: {
+        isLoading: boolean,
+        url?: string
+    }
+    data?: any
+    error?: any
 }

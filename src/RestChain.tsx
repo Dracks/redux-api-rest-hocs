@@ -1,5 +1,6 @@
 import React from "react";
 import { ComponentType } from "react";
+import { Response } from "./Types";
 
 
 type EnrichFn<T> = (prop:T)=>ChainFn
@@ -47,7 +48,7 @@ type ChainFn = {
     /**
      * Set the component that be rendered on everything ok, and return the component to be used
      */
-    build: <T extends {}, E>(Component: ComponentType<SomethingWithData<E, T>>)=>ComponentType<SomethingWithoutData<E, T>>
+    build: <T extends {}, E>(Component: ComponentType<SomethingWithoutData<E, T>>)=>ComponentType<SomethingWithData<E, T>>
 }
 
 export const IdentityCreator = <T extends {}>(EndComponent:ComponentType<T>)=>EndComponent
@@ -62,15 +63,15 @@ const buildSetInitialize = (curr: ChainData)=>(initProp:string)=>(builder({
     ...curr,
     withInitialize:  <T extends {}>(EndComponent:ComponentType<T>, context: ChainData)=>(props:any)=>{
         let property = context.property
-        let data = props[property]
-        if (data && (data.data || data.isLoading)){
+        let data = props[property] as Response
+        if (data && (data.data || data.meta.isLoading || data.error)){
             return <EndComponent {...props} />
         } else {
             if (props[initProp]){
                 props[initProp](props)
                 const newProps = {
                     ...props,
-                    [property]: {isLoading: true}
+                    [property]: {meta:{isLoading: true} }
                 }
                 return <EndComponent {...newProps} />
             } else {
@@ -83,8 +84,8 @@ const buildSetInitialize = (curr: ChainData)=>(initProp:string)=>(builder({
 const buildWithLoading = (curr: ChainData)=>(LoadingComponent: ComponentType)=>(builder({
     ...curr,
     withLoading: <T extends {}>(EndComponent:ComponentType<T>, context: ChainData)=>(props:any)=>{
-        const value = props[context.property]
-        if (value && value.isLoading){
+        const value = props[context.property] as Response
+        if (value && value.meta && value.meta.isLoading){
             return <LoadingComponent />
         } else {
             return <EndComponent {...props}/>
@@ -95,7 +96,7 @@ const buildWithLoading = (curr: ChainData)=>(LoadingComponent: ComponentType)=>(
 const buildWithError = (curr: ChainData)=>(ErrorComponent: ComponentType)=>(builder({
     ...curr,
     withError: <T extends {}>(EndComponent:ComponentType<T>, context: ChainData)=>(props:any)=>{
-        const value = props[context.property]
+        const value = props[context.property] as Response
         if (value && value.error){
             return <ErrorComponent {...props}/>
         } else {
@@ -106,7 +107,7 @@ const buildWithError = (curr: ChainData)=>(ErrorComponent: ComponentType)=>(buil
 
 
 const buildCreateComponent = (currentData: ChainData)=>
-    <T extends {}, E>(Component: ComponentType<SomethingWithData<E, T>>):ComponentType<SomethingWithoutData<E, T>>=>{
+    <T extends {}, E>(Component: ComponentType<SomethingWithoutData<E, T>>):ComponentType<SomethingWithData<E, T>>=>{
         const {property, withLoading, withInitialize, withError} = currentData
         let end = (props:any)=>{
             let data = (props as any)[property]
